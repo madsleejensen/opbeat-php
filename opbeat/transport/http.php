@@ -1,14 +1,6 @@
 <?php
 
-class Opbeat_Transport_Http implements Opbeat_Transport_Interface {
-	private $_base_path;
-	private $_client;
-
-	public function __construct(Opbeat_Client $client, $base_path) {
-		$this->_base_path = $base_path;
-		$this->_client = $client;
-	}
-
+class Opbeat_Transport_Http extends Opbeat_Transport implements Opbeat_Transport_Interface {
 	public function send(Opbeat_Message $message) {
 		$headers = $this->createHeaders();
 		$endpoint = $this->_base_path . 'organizations/' . $this->_client->getOrganizationID() . '/apps/' . $this->_client->getApplicationID() . '/errors/';
