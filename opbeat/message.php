@@ -2,10 +2,10 @@
 
 class Opbeat_Message {
 	const LEVEL_DEBUG = 'debug';
-	const LEVEL_INFOMATION = 'infomation';
+	const LEVEL_INFORMATION = 'information';
 	const LEVEL_ERROR = 'error';
 	const LEVEL_WARNING = 'warning';
-	const LEVEL_FATEL = 'fatal';
+	const LEVEL_FATAL = 'fatal';
 
 	private $_message;
 	private $_timestamp;
@@ -71,7 +71,7 @@ class Opbeat_Message {
 	}
 
 	public function setLevel($level) {
-		$valid_levels = array(Opbeat_Message::LEVEL_ERROR, Opbeat_Message::LEVEL_DEBUG, Opbeat_Message::LEVEL_FATEL, Opbeat_Message::LEVEL_INFOMATION, Opbeat_Message::LEVEL_WARNING);
+		$valid_levels = array(Opbeat_Message::LEVEL_ERROR, Opbeat_Message::LEVEL_DEBUG, Opbeat_Message::LEVEL_FATAL, Opbeat_Message::LEVEL_INFORMATION, Opbeat_Message::LEVEL_WARNING);
 
 		if (!in_array($level, $valid_levels)) {
 			throw new Opbeat_Exception("Level: invalid value, valid values are (".implode(',', $valid_levels).")");
