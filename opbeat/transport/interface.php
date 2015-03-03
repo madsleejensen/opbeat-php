@@ -1,5 +1,6 @@
 <?php
 
-interface Opbeat_Transport_Interface {
-	public function send(Opbeat_Message $message);
+interface opbeat_transport_interface
+{
+    public function send(Opbeat_Message $message);
 }

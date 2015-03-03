@@ -1,5 +1,6 @@
 <?php
 
-interface Opbeat_Message_Part_Interface {
-	public function build();
+interface opbeat_message_part_interface
+{
+    public function build();
 }

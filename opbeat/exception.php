@@ -1,3 +1,5 @@
 <?php
 
-class Opbeat_Exception extends Exception {}
+class opbeat_exception extends Exception
+{
+}
