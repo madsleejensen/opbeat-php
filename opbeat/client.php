@@ -6,17 +6,16 @@ class Opbeat_Client {
 	private $_secretToken;
 	private $_transport;
 
-	public function __construct($organization_id, $application_id, $secret_token, Opbeat_Transport_Interface $transport = null) {
+	public function __construct($organization_id, $application_id, $secret_token, $transport = null) {
 		$this->_organization_id = $organization_id;
 		$this->_application_id = $application_id;
 		$this->_secretToken = $secret_token;
 
-		if (is_null($transport)) {
-			$this->_transport = new Opbeat_Transport_Http($this, 'https://opbeat.com/api/v1/'); // default to http.
+		if (is_null($transport_class)) {
+			$transport_class = 'Opbeat_Transport_Http';
 		}
-		else {
-			$this->_transport = $transport;
-		}
+
+		$this->_transport = new $transport_class($this, self::$default_endpoint);
 	}
 
 	public function getOrganizationID() {
