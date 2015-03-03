@@ -1,17 +1,22 @@
-<?php
+<?php namespace Opbeat\Transport;
 
-class opbeat_transport_http implements Opbeat_Transport_Interface
+use Opbeat\Client;
+use Opbeat\Exception as OpbeatException;
+use Opbeat\Message;
+use Opbeat\Transport\Interface as TransportInterface;
+
+class Http implements TransportInterface
 {
     private $_base_path;
     private $_client;
 
-    public function __construct(Opbeat_Client $client, $base_path)
+    public function __construct(Client $client, $base_path)
     {
         $this->_base_path = $base_path;
         $this->_client = $client;
     }
 
-    public function send(Opbeat_Message $message)
+    public function send(Message $message)
     {
         $headers = $this->createHeaders();
         $endpoint = $this->_base_path.'organizations/'.$this->_client->getOrganizationID().'/apps/'.$this->_client->getApplicationID().'/errors/';
@@ -30,7 +35,7 @@ class opbeat_transport_http implements Opbeat_Transport_Interface
 
         $response_status_code = curl_getinfo($handler, CURLINFO_HTTP_CODE);
         if ($response_status_code != 202) {
-            throw new Opbeat_Exception('Client: unable to send message');
+            throw new OpbeatException('Client: unable to send message');
         }
     }
 

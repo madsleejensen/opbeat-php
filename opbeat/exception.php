@@ -1,5 +1,7 @@
-<?php
+<?php namespace Opbeat;
 
-class opbeat_exception extends Exception
+use Exception;
+
+class Exception extends Exception
 {
 }

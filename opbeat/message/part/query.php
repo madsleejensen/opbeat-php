@@ -1,6 +1,8 @@
-<?php
+<?php namespace Opbeat\Message\Part;
 
-class opbeat_message_part_query implements Opbeat_Message_Part_Interface
+use Opbeat\Message\Part\Interface as PartInterface;
+
+class Query implements PartInterface
 {
     private $_query;
     private $_engine;

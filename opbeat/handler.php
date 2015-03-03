@@ -1,6 +1,12 @@
-<?php
+<?php namespace Opbeat;
 
-class opbeat_handler
+use Opbeat\Client;
+use Opbeat\Exception as OpbeatException;
+use Opbeat\Message as Message;
+use ErrorException;
+use Exception;
+
+class Handler
 {
     private $_clients;
 
@@ -9,12 +15,12 @@ class opbeat_handler
         $this->_clients = array();
     }
 
-    public function addClient(Opbeat_Client $client)
+    public function addClient(Client $client)
     {
         $this->_clients[] = $client;
     }
 
-    public function removeClient(Opbeat_Client $client)
+    public function removeClient(Client $client)
     {
         $index = array_search($client, $this->_clients);
         if ($index !== false) {
@@ -34,7 +40,7 @@ class opbeat_handler
 
     public function handleException(Exception $exception)
     {
-        if ($exception instanceof Opbeat_Exception) {
+        if ($exception instanceof OpbeatException) {
             return; // exclude opbeat specific exceptions to avoid endless loops.
         }
 
@@ -85,28 +91,28 @@ class opbeat_handler
     private function translateErrorCodeToLevel($code)
     {
         switch ($code) {
-            case E_ERROR: return Opbeat_Message::LEVEL_ERROR;
-            case E_WARNING: return Opbeat_Message::LEVEL_WARNING;
-            case E_PARSE: return Opbeat_Message::LEVEL_ERROR;
-            case E_NOTICE: return Opbeat_Message::LEVEL_INFOMATION;
-            case E_CORE_ERROR: return Opbeat_Message::LEVEL_ERROR;
-            case E_CORE_WARNING: return Opbeat_Message::LEVEL_WARNING;
-            case E_COMPILE_ERROR: return Opbeat_Message::LEVEL_ERROR;
-            case E_COMPILE_WARNING: return Opbeat_Message::LEVEL_WARNING;
-            case E_USER_ERROR: return Opbeat_Message::LEVEL_ERROR;
-            case E_USER_WARNING: return Opbeat_Message::LEVEL_WARNING;
-            case E_USER_NOTICE: return Opbeat_Message::LEVEL_INFOMATION;
-            case E_STRICT: return Opbeat_Message::LEVEL_INFOMATION;
-            case E_RECOVERABLE_ERROR: return Opbeat_Message::LEVEL_ERROR;
+            case E_ERROR: return Message::LEVEL_ERROR;
+            case E_WARNING: return Message::LEVEL_WARNING;
+            case E_PARSE: return Message::LEVEL_ERROR;
+            case E_NOTICE: return Message::LEVEL_INFOMATION;
+            case E_CORE_ERROR: return Message::LEVEL_ERROR;
+            case E_CORE_WARNING: return Message::LEVEL_WARNING;
+            case E_COMPILE_ERROR: return Message::LEVEL_ERROR;
+            case E_COMPILE_WARNING: return Message::LEVEL_WARNING;
+            case E_USER_ERROR: return Message::LEVEL_ERROR;
+            case E_USER_WARNING: return Message::LEVEL_WARNING;
+            case E_USER_NOTICE: return Message::LEVEL_INFOMATION;
+            case E_STRICT: return Message::LEVEL_INFOMATION;
+            case E_RECOVERABLE_ERROR: return Message::LEVEL_ERROR;
         }
 
         if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
             switch ($code) {
-                case E_DEPRECATED: return Opbeat_Message::LEVEL_WARNING;
-                case E_USER_DEPRECATED: return Opbeat_Message::LEVEL_WARNING;
+                case E_DEPRECATED: return Message::LEVEL_WARNING;
+                case E_USER_DEPRECATED: return Message::LEVEL_WARNING;
             }
         }
 
-        return Opbeat_Message::LEVEL_ERROR;
+        return Message::LEVEL_ERROR;
     }
 }

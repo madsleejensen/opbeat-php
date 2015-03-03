@@ -1,6 +1,10 @@
-<?php
+<?php namespace Opbeat\Message\Part;
 
-class opbeat_message_part_http implements Opbeat_Message_Part_Interface
+use Opbeat\Exception as OpbeatException;
+use Opbeat\Message\Part\Interface as PartInterface;
+use Opbeat\Utils;
+
+class Http implements PartInterface
 {
     private $_url;
     private $_method;
@@ -43,7 +47,7 @@ class opbeat_message_part_http implements Opbeat_Message_Part_Interface
 
     public function setCookies(Array $cookies)
     {
-        $this->_cookies = Opbeat_Utils::inlineCookies($cookies);
+        $this->_cookies = Utils::inlineCookies($cookies);
 
         return $this;
     }
@@ -104,7 +108,7 @@ class opbeat_message_part_http implements Opbeat_Message_Part_Interface
     {
         $valid_methods = array('GET', 'POST');
         if (!in_array($method, $valid_methods)) {
-            throw new Opbeat_Exception("Method: invalid value, valid values are (".implode(',', $valid_methods).")");
+            throw new OpbeatException("Method: invalid value, valid values are (".implode(',', $valid_methods).")");
         }
 
         $this->_method = $method;

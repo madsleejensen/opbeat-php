@@ -1,6 +1,8 @@
-<?php
+<?php namespace Opbeat\Message\Part;
 
-class opbeat_message_part_exception implements Opbeat_Message_Part_Interface
+use Opbeat\Message\Part\Interface as PartInterface;
+
+class Exception implements PartInterface
 {
     private $_exception;
 

@@ -1,6 +1,16 @@
-<?php
+<?php namespace Opbeat;
 
-class opbeat_message
+use Opbeat\Message\Part\Exception as PartException;
+use Opbeat\Message\Part\Stacktrace;
+use Opbeat\Message\Part\Http as PartHttp;
+use Opbeat\Message\Part\Query as PartQuery;
+use Opbeat\Exception as OpbeatException;
+use Opbeat\Message as Message;
+use Opbeat\Message\Part\Interface as PartInterface;
+use Opbeat\Utils;
+use Exception;
+
+class Message
 {
     const LEVEL_DEBUG = 'debug';
     const LEVEL_INFOMATION = 'infomation';
@@ -36,27 +46,27 @@ class opbeat_message
 
     public function setException(Exception $exception)
     {
-        $this->_exception = new Opbeat_Message_Part_Exception($exception);
-        $this->_stacktrace = Opbeat_Message_Part_Stacktrace::createByException($exception);
+        $this->_exception = new PartException($exception);
+        $this->_stacktrace = Stacktrace::createByException($exception);
 
         return $this;
     }
 
-    public function setStacktrace(Opbeat_Message_Part_Stacktrace $stacktrace)
+    public function setStacktrace(Stacktrace $stacktrace)
     {
         $this->_stacktrace = $stacktrace;
 
         return $this;
     }
 
-    public function setHTTP(Opbeat_Message_Part_Http $http)
+    public function setHTTP(PartHttp $http)
     {
         $this->_http = $http;
 
         return $this;
     }
 
-    public function setQuery(Opbeat_Message_Part_Query $query)
+    public function setQuery(PartQuery $query)
     {
         $this->_query = $query;
 
@@ -68,7 +78,7 @@ class opbeat_message
         $encoded = (string) $client_supplied_id;
 
         if (strlen($encoded) > 36) {
-            throw new Opbeat_Exception("Client supplied ID: can maximum be 36 characters long.");
+            throw new OpbeatException("Client supplied ID: can maximum be 36 characters long.");
         }
 
         $this->_client_supplied_id = $encoded;
@@ -86,10 +96,10 @@ class opbeat_message
 
     public function setLevel($level)
     {
-        $valid_levels = array(Opbeat_Message::LEVEL_ERROR, Opbeat_Message::LEVEL_DEBUG, Opbeat_Message::LEVEL_FATEL, Opbeat_Message::LEVEL_INFOMATION, Opbeat_Message::LEVEL_WARNING);
+        $valid_levels = array(Message::LEVEL_ERROR, Message::LEVEL_DEBUG, Message::LEVEL_FATEL, Message::LEVEL_INFOMATION, Message::LEVEL_WARNING);
 
         if (!in_array($level, $valid_levels)) {
-            throw new Opbeat_Exception("Level: invalid value, valid values are (".implode(',', $valid_levels).")");
+            throw new OpbeatException("Level: invalid value, valid values are (".implode(',', $valid_levels).")");
         }
 
         $this->_level = $level;
@@ -118,7 +128,7 @@ class opbeat_message
     public function setTimestamp($timestamp)
     {
         if (!strtotime($timestamp)) {
-            throw new Opbeat_Exception("Timestamp: should be a valid time string (ISO 8601)");
+            throw new OpbeatException("Timestamp: should be a valid time string (ISO 8601)");
         }
 
         $this->_timestamp = $timestamp;
@@ -139,7 +149,7 @@ class opbeat_message
         foreach ($properties as $property_name) {
             $property_value = $this->{"_".$property_name};
             if (!is_null($property_value)) {
-                $data[$property_name] = ($property_value instanceof Opbeat_Message_Part_Interface) ? $property_value->build() : $property_value;
+                $data[$property_name] = ($property_value instanceof PartInterface) ? $property_value->build() : $property_value;
             }
         }
 
@@ -152,13 +162,13 @@ class opbeat_message
     {
         $default = array();
         $default['timestamp'] = date('c');
-        $default['client_supplied_id'] = Opbeat_Utils::uniqueID();
+        $default['client_supplied_id'] = Utils::uniqueID();
         $default['machine'] = array(
             'hostname' => gethostname(),
         );
 
         if ($this->is_http_request()) {
-            $http = new Opbeat_Message_Part_Http();
+            $http = new PartHttp;
             $http->loadFromRequest();
 
             $default['http'] = $http->build();

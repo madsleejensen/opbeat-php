@@ -1,6 +1,6 @@
-<?php
+<?php namespace Opbeat;
 
-class opbeat_utils
+class Utils
 {
     public static function inlineCookies(Array $items)
     {

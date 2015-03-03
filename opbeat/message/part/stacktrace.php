@@ -1,12 +1,15 @@
-<?php
+<?php namespace Opbeat\Message\Part;
 
-class opbeat_message_part_stacktrace implements Opbeat_Message_Part_Interface
+use Opbeat\Message\Part\Interface as PartInterface;
+use Opbeat\Message\Part\Stacktrace;
+
+class Stacktrace implements PartInterface
 {
     private $_exception;
 
     public static function createByException(Exception $exception)
     {
-        $stacktrace = new Opbeat_Message_Part_Stacktrace();
+        $stacktrace = new Stacktrace;
         $stacktrace->setException($exception);
 
         return $stacktrace;

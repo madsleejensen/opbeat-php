@@ -1,6 +1,8 @@
-<?php
+<?php namespace Opbeat\Transport;
 
-interface opbeat_transport_interface
+use Opbeat\Message as Message;
+
+interface Interface
 {
-    public function send(Opbeat_Message $message);
+    public function send(Message $message);
 }

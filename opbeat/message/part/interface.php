@@ -1,6 +1,6 @@
-<?php
+<?php namespace Opbeat\Message\Part;
 
-interface opbeat_message_part_interface
+interface Interface
 {
     public function build();
 }
