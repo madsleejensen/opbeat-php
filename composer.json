@@ -1,0 +1,21 @@
+{
+    "name": "madsleejensen/opbeat-php",
+    "description": "Opbeat wrapper for PHP",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mads Lee Jensen",
+            "email": "madsleejensen@gmail.com"
+        },
+        {
+            "name": "Ronni Egeriis Persson",
+            "email": "ronni@egeriis.me"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Opbeat\\": "opbeat/"
+        }
+    },
+    "require": {}
+}
