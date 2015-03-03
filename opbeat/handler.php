@@ -78,15 +78,15 @@ class Opbeat_Handler {
 			case E_ERROR: return Opbeat_Message::LEVEL_ERROR;
 			case E_WARNING: return Opbeat_Message::LEVEL_WARNING;
 			case E_PARSE: return Opbeat_Message::LEVEL_ERROR;
-			case E_NOTICE: return Opbeat_Message::LEVEL_INFOMATION;
+			case E_NOTICE: return Opbeat_Message::LEVEL_INFORMATION;
 			case E_CORE_ERROR: return Opbeat_Message::LEVEL_ERROR;
 			case E_CORE_WARNING: return Opbeat_Message::LEVEL_WARNING;
 			case E_COMPILE_ERROR: return Opbeat_Message::LEVEL_ERROR;
 			case E_COMPILE_WARNING: return Opbeat_Message::LEVEL_WARNING;
 			case E_USER_ERROR: return Opbeat_Message::LEVEL_ERROR;
 			case E_USER_WARNING: return Opbeat_Message::LEVEL_WARNING;
-			case E_USER_NOTICE: return Opbeat_Message::LEVEL_INFOMATION;
-			case E_STRICT: return Opbeat_Message::LEVEL_INFOMATION;
+			case E_USER_NOTICE: return Opbeat_Message::LEVEL_INFORMATION;
+			case E_STRICT: return Opbeat_Message::LEVEL_INFORMATION;
 			case E_RECOVERABLE_ERROR: return Opbeat_Message::LEVEL_ERROR;
 		}
 

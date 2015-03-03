@@ -26,7 +26,7 @@ $client->captureQuery($query_string, $engine);
 ```
 
 ### Handler
-You can decide to use the Opbeat_Handler to register for errors and automaticly forward them to the a client.
+You can decide to use the Opbeat_Handler to register for errors and automatically forward them to the a client.
 
 ```php
 $handler = new Opbeat_Handler();
@@ -34,7 +34,7 @@ $handler->addClient($client);
 $handler->registerErrorHandler();
 $handler->registerExceptionHandler();
 
-// example of a uncatched exception.
+// example of an uncaught exception.
 function blabla() {
     throw new Exception('123213123123');
 }
