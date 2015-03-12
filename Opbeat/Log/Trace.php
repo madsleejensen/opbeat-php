@@ -36,14 +36,11 @@ class Trace implements JsonSerializable
 
     protected function getFullFunctionName($frame)
     {
-        switch ($frame['type']) {
-            case '::':
-            case '->':
-                return $frame['class'] . $frame['type'] . $frame['function'];
-
-            default:
-                return $frame['function'];
+        if (!isset($frame['type'])) {
+            return $frame['function'];
         }
+
+        return $frame['class'] . $frame['type'] . $frame['function'];
     }
 
     protected function isValidFrame($frame)
