@@ -45,7 +45,8 @@ class Entry implements JsonSerializable
         $this->baseAttributes = [
             'timestamp' => date('c'),
             'level' => $this->getErrorLevel(),
-            'culprit' => $this->getTrace()->getFirstFrame()['function']
+            'culprit' => $this->getTrace()->getFirstFrame()['function'],
+            'logger' => 'opbeat-php'
         ];
     }
 
