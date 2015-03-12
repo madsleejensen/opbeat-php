@@ -1,0 +1,6 @@
+suites:
+    opbeat_suite:
+        namespace: Opbeat
+        psr4_prefix: Opbeat
+        src_path: Opbeat
+stop_on_failure: false

@@ -1,69 +1,83 @@
 <?php namespace Opbeat;
 
-use Opbeat\Transport\Interface as TransportInterface;
-use Opbeat\Transport\Http as Http;
-use Opbeat\Message as Message;
-use Opbeat\Message\Part\Query as PartQuery;
-
+use Illuminate\Contracts\Config\Repository as Config;
+use Exception;
+use Opbeat\Log\Entry;
+use GuzzleHttp\Client as Guzzle;
 
 class Client
 {
-    private $_organization_id;
-    private $_application_id;
-    private $_secretToken;
-    private $_transport;
+    const API_HTTP_METHOD     = 'POST';
+    const API_HOST            = 'https://opbeat.com/api/v1';
+    const API_ERRORS_ENDPOINT = '/organizations/%s/apps/%s/errors/';
 
-    public function __construct($organization_id, $application_id, $secret_token, TransportInterface $transport = null)
+    protected $organization_id;
+    protected $app_id;
+    protected $access_token;
+
+    public function __construct(Config $config)
     {
-        $this->_organization_id = $organization_id;
-        $this->_application_id = $application_id;
-        $this->_secretToken = $secret_token;
+        $this->organization_id  = $config->get('opbeat.organization_id');
+        $this->app_id           = $config->get('opbeat.app_id');
+        $this->access_token     = $config->get('opbeat.access_token');
+        $enableExceptionHandler = $config->get('opbeat.enable_exception_handler', true);
+        $enableErrorHandler     = $config->get('opbeat.enable_error_handler', true);
 
-        if (is_null($transport)) {
-            $this->_transport = new Http($this, 'https://opbeat.com/api/v1/'); // default to http.
-        } else {
-            $this->_transport = $transport;
+        if ($enableExceptionHandler) {
+            $this->enableExceptionHandler();
+        }
+
+        if ($enableErrorHandler) {
+            $this->enableErrorHandler();
         }
     }
 
-    public function getOrganizationID()
+    public function catchException(Exception $exception)
     {
-        return $this->_organization_id;
+        static $client;
+        if (!isset($client)) {
+            $client = new Guzzle;
+        }
+
+        $client->post($this->errorsEndpoint(), [
+            'headers' => [
+                'Authorization: Bearer '.$this->access_token
+            ],
+            'json' => Entry::create($exception)
+        ]);
     }
 
-    public function getApplicationID()
+    public function handleError($no, $message, $filename = null, $lineNumber = null, $context = null)
     {
-        return $this->_application_id;
+        throw new ErrorException($message, 0, $no, $filename, $lineNumber);
     }
 
-    public function getSecretToken()
+    public function enableExceptionHandler()
     {
-        return $this->_secretToken;
+        set_exception_handler($this->exceptionHandler());
     }
 
-    public function captureMessage($message, $level = Message::LEVEL_ERROR)
+    public function enableErrorHandler()
     {
-        $message = new Message($message, $level);
-        $this->send($message);
+        set_error_handler($this->errorHandler());
     }
 
-    public function captureException(Exception $exception, $level = Message::LEVEL_ERROR)
+    protected function exceptionHandler()
     {
-        $message_text = get_class($exception).': '.$exception->getMessage();
-        $message = new Message($message_text, $level);
-        $message->setException($exception);
-        $this->send($message);
+        return [$this, 'catchException'];
     }
 
-    public function captureQuery($query, $engine = null, $level = Message::LEVEL_ERROR)
+    protected function errorHandler()
     {
-        $message = new Message($query, $level);
-        $message->setQuery(new PartQuery($query, $engine));
-        $this->send($message);
+        return [$this, 'handleError'];
     }
 
-    public function send(Message $message)
+    protected function errorsEndpoint()
     {
-        $this->_transport->send($message);
+        static $endpoint;
+        if (!isset($endpoint)) {
+            $endpoint = self::API_HOST.sprintf(self::API_ERRORS_ENDPOINT, $this->organization_id, $this->app_id);
+        }
+        return $endpoint;
     }
 }
