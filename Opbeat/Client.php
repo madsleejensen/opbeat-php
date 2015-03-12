@@ -41,6 +41,7 @@ class Client
         }
 
         $client->post($this->errorsEndpoint(), [
+            'future' => true,
             'headers' => [
                 'Authorization' => 'Bearer '.$this->access_token
             ],
