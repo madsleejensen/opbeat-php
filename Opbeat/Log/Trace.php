@@ -81,7 +81,7 @@ class Trace implements JsonSerializable
         if (!empty($contextLines)) {
             $context['pre_context']  = array_slice($contextLines, 0, $lineCount);
             $context['context_line'] = $contextLines[$frame['line']];
-            $context['post_context'] = array_slice($contextLines, -$lineCount);
+            $context['post_context'] = array_slice($contextLines, $lineCount + 1, $lineCount);
         }
 
         return $context;
