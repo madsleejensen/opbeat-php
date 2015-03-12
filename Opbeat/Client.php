@@ -63,12 +63,12 @@ class Client
         set_error_handler($this->errorHandler());
     }
 
-    protected function exceptionHandler()
+    public function exceptionHandler()
     {
         return [$this, 'catchException'];
     }
 
-    protected function errorHandler()
+    public function errorHandler()
     {
         return [$this, 'handleError'];
     }
