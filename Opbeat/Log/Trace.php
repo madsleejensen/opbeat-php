@@ -40,7 +40,7 @@ class Trace implements JsonSerializable
             return $frame['function'];
         }
 
-        return $frame['class'] . $frame['type'] . $frame['function'];
+        return $frame['class'].$frame['type'].$frame['function'];
     }
 
     protected function isValidFrame($frame)
@@ -93,7 +93,7 @@ class Trace implements JsonSerializable
             'abs_path' => $frame['file'],
             'filename' => basename($frame['file']),
             'function' => $this->getFullFunctionName($frame),
-            'lineno' => $frame['line']
+            'lineno' => $frame['line'],
         ];
 
         $values = array_merge($values, $this->getContextForFrame($frame));
@@ -119,7 +119,7 @@ class Trace implements JsonSerializable
             'frames' => array_map(
                 [$this, 'mapFrame'],
                 $this->validFrames()
-            )
+            ),
         ];
     }
 }

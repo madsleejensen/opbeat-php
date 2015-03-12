@@ -37,15 +37,15 @@ class Client
     {
         static $client;
         if (!isset($client)) {
-            $client = new Guzzle;
+            $client = new Guzzle();
         }
 
         $client->post($this->errorsEndpoint(), [
             'future' => true,
             'headers' => [
-                'Authorization' => 'Bearer '.$this->access_token
+                'Authorization' => 'Bearer '.$this->access_token,
             ],
-            'json' => Entry::create($exception)
+            'json' => Entry::create($exception),
         ]);
     }
 
@@ -80,6 +80,7 @@ class Client
         if (!isset($endpoint)) {
             $endpoint = self::API_HOST.sprintf(self::API_ERRORS_ENDPOINT, $this->organization_id, $this->app_id);
         }
+
         return $endpoint;
     }
 }

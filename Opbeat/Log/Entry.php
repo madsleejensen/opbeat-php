@@ -3,8 +3,6 @@
 use ErrorException;
 use Exception;
 use JsonSerializable;
-use Opbeat\Log\Trace;
-use Opbeat\Log\Http;
 use Opbeat\Factory;
 
 class Entry implements JsonSerializable
@@ -36,7 +34,7 @@ class Entry implements JsonSerializable
             static::LEVEL_INFO,
             static::LEVEL_WARNING,
             static::LEVEL_ERROR,
-            static::LEVEL_FATAL
+            static::LEVEL_FATAL,
         ];
     }
 
@@ -46,7 +44,7 @@ class Entry implements JsonSerializable
             'timestamp' => date('c'),
             'level' => $this->getErrorLevel(),
             'culprit' => $this->getTrace()->getFirstFrame()['function'],
-            'logger' => 'opbeat-php'
+            'logger' => 'opbeat-php',
         ];
     }
 
@@ -56,6 +54,7 @@ class Entry implements JsonSerializable
         if (!isset($trace)) {
             $trace = Trace::create($this->exception->getTrace());
         }
+
         return $trace;
     }
 
@@ -85,13 +84,13 @@ class Entry implements JsonSerializable
     public function jsonSerialize()
     {
         return array_merge($this->baseAttributes, [
-            'message' => get_class($this->exception) . ': ' . $this->exception->getMessage(),
+            'message' => get_class($this->exception).': '.$this->exception->getMessage(),
             'exception' => [
                 'type' => get_class($this->exception),
-                'value' => $this->exception->getMessage()
+                'value' => $this->exception->getMessage(),
             ],
             'stacktrace' => $this->getTrace(),
-            'http' => Http::create($this->requestAttributes)
+            'http' => Http::create($this->requestAttributes),
         ]);
     }
 }

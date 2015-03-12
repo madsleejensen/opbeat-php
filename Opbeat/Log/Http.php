@@ -1,6 +1,5 @@
 <?php namespace Opbeat\Log;
 
-use InvalidArgumentException;
 use JsonSerializable;
 use Opbeat\Factory;
 
@@ -20,7 +19,7 @@ class Http implements JsonSerializable
     protected function getProtocol()
     {
         if (($sp = $this->attributeValueOrFalse('SERVER_PROTOCOL')) === false) {
-            return null;
+            return;
         }
 
         return strtolower(substr($sp, 0, strpos($sp, '/')));
@@ -37,7 +36,8 @@ class Http implements JsonSerializable
                   ? $s['HTTP_X_FORWARDED_HOST']
                   : (isset($s['HTTP_HOST']) ? $s['HTTP_HOST'] : null);
         $host = isset($host) ? $host : $s['SERVER_NAME'].$port;
-        return $protocol . '://' . $host;
+
+        return $protocol.'://'.$host;
     }
 
     protected function fullUrl($use_forwarded_host = false)
@@ -56,6 +56,7 @@ class Http implements JsonSerializable
         if (!isset($this->requestAttribute[$key])) {
             return false;
         }
+
         return $this->requestAttribute[$key];
     }
 
@@ -70,12 +71,15 @@ class Http implements JsonSerializable
                 $headers[$headerName] = $value;
             }
         }
+
         return $headers;
     }
 
     public function jsonSerialize()
     {
-        if (!$this->isHttpRequest()) return null;
+        if (!$this->isHttpRequest()) {
+            return;
+        }
 
         return array_filter([
             'url' => $this->fullUrl(),
@@ -87,7 +91,7 @@ class Http implements JsonSerializable
             'http_host' => $this->attributeValueOrFalse('HTTP_HOST'),
             'user_agent' => $this->attributeValueOrFalse('HTTP_USER_AGENT'),
             'secure' => ($this->attributeValueOrFalse('HTTPS') == 'on'),
-            'env' => $this->environmentAttributes
+            'env' => $this->environmentAttributes,
         ]);
     }
 }
