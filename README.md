@@ -1,44 +1,46 @@
 # Opbeat PHP agent
 
-Simple library for communicating with the Opbeat services. 
+Simple library for communicating with the Opbeat services.
 
-### Opbeat client
-Instantiate a instance of the Opbeat_Client, and provide the organization_id, application_id, secret_token provided by opbeat. 
 
-```php
-$client = new Opbeat_Client($organization_id, $application_id, $secret_token);
+## Installation
+
+Use Composer to install this library:
+
+```bash
+composer require madsleejensen/opbeat-php
 ```
 
-### Send errors
+## Configuration
+
+You are required to provide a configuration handler which implements [Illuminate/Contracts/Config/Repository](https://github.com/illuminate/contracts/blob/master/Config/Repository.php).
+
+Pass an instance of this config handler when initializing the `Client`.
+
+`Opbeat\Client` will require the following settings:
+
+- `opbeat.organization_id` (string)
+- `opbeat.app_id` (string)
+- `opbeat.access_token` (string)
+
+The following settings are optional and have a default value:
+
+- `opbeat.enable_exception_handler` (boolean, default: true)
+- `opbeat.enable_error_handler` (boolean, default: true)
+
+
+## Enable Client
+
+When you've set up your configuration, simply create an instance of `Opbeat\Client`. Unless you set `enable_exception_handler` or `enable_error_handler` to `false`, the client will automatically register a handler for both.
 
 ```php
-# example of logging a exception
-$exception = new Exception("hello world");
-$client->captureException($exception);
+$client = new \Opbeat\Client($config);
 
-# example of logging a simple error message.
-$client->captureMessage("This is a simple error", Opbeat_Message::LEVEL_DEBUG);
 
-# example of logging a SQL statement.
-$query_string = "SELECT * FROM users";
-$engine = "MySQL";
-$client->captureQuery($query_string, $engine);
-```
+## Manually Catch Exception
 
-### Handler
-You can decide to use the Opbeat_Handler to register for errors and automaticly forward them to the a client.
+You can also catch exceptions manually. `Opbeat\Client` exposes a `catchException` method for this:
 
 ```php
-$handler = new Opbeat_Handler();
-$handler->addClient($client);
-$handler->registerErrorHandler();
-$handler->registerExceptionHandler();
-
-// example of a uncatched exception.
-function blabla() {
-    throw new Exception('123213123123');
-}
-
-blabla();
-
+public void catchException ( Exception $exception )
 ```
