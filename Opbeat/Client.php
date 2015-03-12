@@ -42,7 +42,7 @@ class Client
 
         $client->post($this->errorsEndpoint(), [
             'headers' => [
-                'Authorization: Bearer '.$this->access_token
+                'Authorization' => 'Bearer '.$this->access_token
             ],
             'json' => Entry::create($exception)
         ]);
