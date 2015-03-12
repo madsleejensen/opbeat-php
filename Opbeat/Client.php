@@ -1,6 +1,7 @@
 <?php namespace Opbeat;
 
 use Illuminate\Contracts\Config\Repository as Config;
+use ErrorException;
 use Exception;
 use Opbeat\Log\Entry;
 use GuzzleHttp\Client as Guzzle;
