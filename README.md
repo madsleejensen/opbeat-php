@@ -35,6 +35,7 @@ When you've set up your configuration, simply create an instance of `Opbeat\Clie
 
 ```php
 $client = new \Opbeat\Client($config);
+```
 
 
 ## Manually Catch Exception
