@@ -51,22 +51,22 @@ class TraceSpec extends ObjectBehavior
 
     public function it_returns_correct_trace_count()
     {
-        $this->jsonSerialize()->shouldHaveCount(count($this->trace) - $this->excludedFrameCount);
+        $this->jsonSerialize()['frames']->shouldHaveCount(count($this->trace) - $this->excludedFrameCount);
     }
 
     public function it_returns_correct_trace_format()
     {
-        $this->jsonSerialize()[0]->shouldHaveKey('abs_path');
-        $this->jsonSerialize()[0]->shouldHaveKey('filename');
-        $this->jsonSerialize()[0]->shouldHaveKey('lineno');
-        $this->jsonSerialize()[0]->shouldHaveKey('function');
-        $this->jsonSerialize()[0]->shouldHaveKey('vars');
-        $this->jsonSerialize()[0]->shouldHaveKey('context_line');
-        $this->jsonSerialize()[0]->shouldHaveKey('pre_context');
-        $this->jsonSerialize()[0]->shouldHaveKey('post_context');
-        $this->jsonSerialize()[0]['pre_context']->shouldHaveCount(3);
-        $this->jsonSerialize()[0]['post_context']->shouldHaveCount(3);
-        $this->jsonSerialize()[1]->shouldNotHaveKey('vars');
+        $this->jsonSerialize()['frames'][0]->shouldHaveKey('abs_path');
+        $this->jsonSerialize()['frames'][0]->shouldHaveKey('filename');
+        $this->jsonSerialize()['frames'][0]->shouldHaveKey('lineno');
+        $this->jsonSerialize()['frames'][0]->shouldHaveKey('function');
+        $this->jsonSerialize()['frames'][0]->shouldHaveKey('vars');
+        $this->jsonSerialize()['frames'][0]->shouldHaveKey('context_line');
+        $this->jsonSerialize()['frames'][0]->shouldHaveKey('pre_context');
+        $this->jsonSerialize()['frames'][0]->shouldHaveKey('post_context');
+        $this->jsonSerialize()['frames'][0]['pre_context']->shouldHaveCount(3);
+        $this->jsonSerialize()['frames'][0]['post_context']->shouldHaveCount(3);
+        $this->jsonSerialize()['frames'][1]->shouldNotHaveKey('vars');
     }
 
     public function it_should_return_correct_frame()

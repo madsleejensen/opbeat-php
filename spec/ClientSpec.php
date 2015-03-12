@@ -9,6 +9,12 @@ class ClientSpec extends ObjectBehavior
 {
     function let(Config $config)
     {
+        $config->get('opbeat.organization_id')->willReturn('...');
+        $config->get('opbeat.app_id')->willReturn('...');
+        $config->get('opbeat.access_token')->willReturn('...');
+        $config->get('opbeat.enable_exception_handler', true)->willReturn(true);
+        $config->get('opbeat.enable_error_handler', true)->willReturn(true);
+
         $this->beConstructedWith($config);
     }
 
@@ -25,13 +31,14 @@ class ClientSpec extends ObjectBehavior
 
     function it_should_not_register_exception_handler_when_passed_false(Config $config)
     {
-        $this->beConstructedWith($config, false);
+        $config->get('opbeat.enable_exception_handler', true)->willReturn(false);
+        $this->beConstructedWith($config);
 
         $expectedHandler = [$this->getWrappedObject(), 'catchException'];
         $this->exceptionHandler()->shouldNotReturn(set_exception_handler(null));
     }
 
-    function it_should_set_error_handler()
+    function it_should_set_error_handler(Config $config)
     {
         $errorHandler = [$this->getWrappedObject(), ['handleError']];
         $this->errorHandler()->shouldReturn(set_error_handler(null));
@@ -39,7 +46,8 @@ class ClientSpec extends ObjectBehavior
 
     function it_should_not_set_error_handler_when_passed_false(Config $config)
     {
-        $this->beConstructedWith($config, true, false);
+        $config->get('opbeat.enable_error_handler', true)->willReturn(false);
+        $this->beConstructedWith($config);
 
         $errorHandler = [$this->getWrappedObject(), ['handleError']];
         $this->errorHandler()->shouldNotReturn(set_error_handler(null));
