@@ -115,9 +115,11 @@ class Trace implements JsonSerializable
 
     public function jsonSerialize()
     {
-        return array_map(
-            [$this, 'mapFrame'],
-            $this->validFrames()
-        );
+        return [
+            'frames' => array_map(
+                [$this, 'mapFrame'],
+                $this->validFrames()
+            )
+        ];
     }
 }
