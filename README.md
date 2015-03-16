@@ -45,3 +45,10 @@ You can also catch exceptions manually. `Opbeat\Client` exposes a `catchExceptio
 ```php
 public void catchException ( Exception $exception )
 ```
+
+
+## Contributing
+
+If you experience any issues or have ideas for improvements, please open a pull request or an issue.
+
+Pull requests must adhere to the [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) and naming scheme of classes must adhere to [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) with `Opbeat` as namespace prefix.
