@@ -99,7 +99,7 @@ class Trace implements JsonSerializable
         $values = array_merge($values, $this->getContextForFrame($frame));
 
         if (!empty($frame['args'])) {
-            $values['vars'] = $frame['args'];
+            $values['vars'] = (object) $frame['args'];
         }
 
         return $values;
