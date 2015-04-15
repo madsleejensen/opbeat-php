@@ -4,6 +4,7 @@ use ErrorException;
 use Exception;
 use JsonSerializable;
 use Opbeat\Factory;
+use OutOfBoundsException;
 
 class Entry implements JsonSerializable
 {
