@@ -75,16 +75,18 @@ class Trace implements JsonSerializable
 
     protected function getContextForFrame($frame)
     {
+        $line = $frame['line'] == 0 ? 1 : $frame['line'];
+
         $context   = [];
         $lineCount = $this->contextLineCount;
-        $startLine = $frame['line'] - $lineCount;
-        $endLine   = $frame['line'] + $lineCount;
+        $startLine = $line - $lineCount;
+        $endLine   = $line + $lineCount;
 
         $contextLines = $this->getLinesFromFile($frame['file'], $startLine, $endLine);
 
         if (!empty($contextLines)) {
             $context['pre_context']  = array_slice($contextLines, 0, $lineCount);
-            $context['context_line'] = $contextLines[$frame['line']];
+            $context['context_line'] = $contextLines[$line];
             $context['post_context'] = array_slice($contextLines, $lineCount + 1, $lineCount);
         }
 
