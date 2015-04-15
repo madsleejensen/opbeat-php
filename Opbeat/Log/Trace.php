@@ -27,6 +27,10 @@ class Trace implements JsonSerializable
         $validFrames     = $this->validFrames();
         $validFrameCount = count($validFrames);
 
+        if ($validFrameCount) {
+            throw new OutOfBoundsException("No trace frames available");
+        }
+
         if ($validFrameCount <= $index) {
             throw new OutOfBoundsException("Trace only contains {$validFrameCount}. Requested frame: {$index}");
         }
